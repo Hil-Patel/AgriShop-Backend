@@ -18,5 +18,6 @@ public class CropResponse {
     private Long sellerId;
     private String sellerName;
     private String imageBase64;
+    private BigDecimal acceptedBid;
     private LocalDateTime createdAt;
 }
