@@ -45,7 +45,7 @@ public class Crop {
     @NotNull
     @Positive
     private BigDecimal minBid;
-    @NotNull
+
     @Positive
     private BigDecimal acceptedBid;
 
