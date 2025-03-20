@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/bids")
 public class BidController {
@@ -125,11 +124,13 @@ public class BidController {
                     }
                     
                     bid.setStatus(Bid.BidStatus.ACCEPTED);
+
                     bidRepository.save(bid);
                     
                     // Mark the crop as completed
                     Crop crop = bid.getCrop();
                     crop.setStatus(Crop.CropStatus.COMPLETED);
+                    crop.setAcceptedBid(bid.getAmount());
                     cropRepository.save(crop);
                     
                     return ResponseEntity.ok(new MessageResponse("Bid accepted successfully!"));

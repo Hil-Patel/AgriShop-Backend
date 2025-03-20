@@ -1,33 +1,20 @@
 package com.agrishop.payload.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 public class CropRequest {
-    @NotBlank
     private String name;
-
-    @NotBlank
     private String description;
-
-    @NotNull
-    @Positive
     private Double quantity;
-
-    @NotBlank
     private String unit;
-
-    @NotNull
-    @Positive
-    private String minBid;
-
-    @NotNull
+    private BigDecimal minBid;
     private LocalDateTime endDate;
-    
-    private String imageBase64;
+    private MultipartFile[] images; // Accept multiple images
+
+    // Getters and Setters
 }
