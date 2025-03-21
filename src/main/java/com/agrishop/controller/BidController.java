@@ -84,7 +84,7 @@ public class BidController {
     }
 
     @GetMapping("/crop/{cropId}")
-    public ResponseEntity<List<BidResponse>> getBidsByCrop(@PathVariable Long cropId) {
+    public ResponseEntity<List<BidResponse>> getBidsByCrop(@PathVariable("cropId") Long cropId) {
         Crop crop = cropRepository.findById(cropId)
                 .orElseThrow(() -> new RuntimeException("Crop not found"));
 
@@ -113,7 +113,42 @@ public class BidController {
 
     @PutMapping("/{bidId}/accept")
     @PreAuthorize("hasRole('ROLE_FARMER')")
-    public ResponseEntity<?> acceptBid(@PathVariable Long bidId) {
+    public ResponseEntity<?> acceptBid(@PathVariable("bidId") Long bidId) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return bidRepository.findById(bidId)
+                .map(bid -> {
+                    if (!bid.getCrop().getSeller().getId().equals(userDetails.getId())) {
+                        return ResponseEntity.badRequest()
+                                .body(new MessageResponse("You can only accept bids for your own crops!"));
+                    }
+
+                    // Accept the selected bid
+                    bid.setStatus(Bid.BidStatus.ACCEPTED);
+                    bidRepository.save(bid);
+
+                    // Get the crop associated with the bid
+                    Crop crop = bid.getCrop();
+                    crop.setStatus(Crop.CropStatus.COMPLETED);
+                    crop.setAcceptedBid(bid.getAmount());
+                    cropRepository.save(crop);
+
+                    // Reject all other bids for the same crop
+                    List<Bid> otherBids = bidRepository.findByCropAndStatus(crop, Bid.BidStatus.PENDING);
+                    for (Bid otherBid : otherBids) {
+                        otherBid.setStatus(Bid.BidStatus.REJECTED);
+                    }
+                    bidRepository.saveAll(otherBids);
+
+                    return ResponseEntity.ok(new MessageResponse("Bid accepted successfully!"));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+/*
+    @PutMapping("/{bidId}/accept")
+    @PreAuthorize("hasRole('ROLE_FARMER')")
+    public ResponseEntity<?> acceptBid(@PathVariable("bidId") Long bidId) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
         return bidRepository.findById(bidId)
@@ -137,7 +172,7 @@ public class BidController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
-
+*/
     private BidResponse mapBidToResponse(Bid bid) {
         BidResponse response = new BidResponse();
         response.setId(bid.getId());

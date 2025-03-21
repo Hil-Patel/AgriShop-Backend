@@ -15,7 +15,9 @@ import java.util.Optional;
 
 @Repository
 public interface BidRepository extends JpaRepository<Bid, Long> {
+    @Query
     List<Bid> findByCrop(Crop crop);
+    @Query
     List<Bid> findByBidder(User bidder);
     
     @Query("SELECT b FROM Bid b WHERE b.crop = ?1 ORDER BY b.amount DESC")
@@ -23,4 +25,8 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     
     @Query("SELECT MAX(b.amount) FROM Bid b WHERE b.crop = ?1")
     Optional<BigDecimal> findHighestBidAmountByCrop(Crop crop);
+
+
+    @Query
+    List<Bid> findByCropAndStatus(Crop crop, Bid.BidStatus status);
 }
