@@ -23,7 +23,7 @@ The backend of **AgriShop** is built using **Spring Boot** and **Spring Security
 ## Tech Stack  
 - **Backend Framework**: Spring Boot  
 - **Security**: Spring Security & JWT Authentication  
-- **Database**: MySQL / PostgreSQL  
+- **Database**: MySQL  
 - **ORM**: Hibernate / JPA  
 - **API Documentation**: Swagger (if applicable)  
 
@@ -32,7 +32,7 @@ The backend of **AgriShop** is built using **Spring Boot** and **Spring Security
 ### **Prerequisites**  
 - **Java 17+** (Download from [oracle.com](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html))  
 - **Maven** (Download from [maven.apache.org](https://maven.apache.org/download.cgi))  
-- **MySQL / PostgreSQL** (Set up your database)  
+- **MySQL ** (Set up your database)  
 - **Git** (Download from [git-scm.com](https://git-scm.com/))  
 
 ### **Steps to Run**  
